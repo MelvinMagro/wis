@@ -1,0 +1,21 @@
+name: WordPress CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    name: Build and Deploy WordPress
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Theme Assets
+        run: |
+          npm install
+          npm run build
+
