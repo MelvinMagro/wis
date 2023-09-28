@@ -22,8 +22,12 @@ jobs:
         run: |
           ls -la /var/www/html
           echo "GitHub Actions runner user: $USER"
-          
-          # Add any additional deployment steps as needed.
+
+      - name: Check Node.js Version on Server
+        run: |
+          # Add your SSH commands here
+          # Example: ssh -i /path/to/your/private-key.pem user@your-server "node -v"
+          ssh -i /mnt/c/Users/melvi/Desktop/melvinmagro.pem ubuntu@51.20.52.140 "node -v"
 
         env:
           DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
