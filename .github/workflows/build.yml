@@ -25,6 +25,8 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
           chmod 400 deploy_key.pem
           echo "Starting SSH connection"
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts  # Ensure the known_hosts file exists
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
           
