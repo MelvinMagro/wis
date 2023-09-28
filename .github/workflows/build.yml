@@ -14,9 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Deploy to Server
-      #   run: |
-      #     echo "Deploying to server using GitHub PAT"
           
       - name: Debug Logging
         run: |
@@ -25,9 +22,14 @@ jobs:
 
       - name: Check Node.js Version on Server
         run: |
-          # Add your SSH commands here
-          # Example: ssh -i /path/to/your/private-key.pem user@your-server "node -v"
-          ssh -i /mnt/c/Users/melvi/Desktop/melvinmagro.pem ubuntu@51.20.52.140 "node -v"
+          # Create a temporary file to store the private key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
+
+          # Make the key file readable only by the owner
+          chmod 400 deploy_key.pem
+      
+          # Use the private key to connect to the server
+          ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "node -v"
 
         env:
           DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
