@@ -23,7 +23,7 @@ jobs:
           touch ~/.ssh/known_hosts  # Ensure the known_hosts file exists
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
-          cd /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo && npm install && npm run build
+          ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "cd /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo && npm install && npm run build"
           
       # - name: Install Node.js and npm and Build Theme Assets
       #   uses: actions/setup-node@v2
