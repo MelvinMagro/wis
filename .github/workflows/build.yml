@@ -27,6 +27,9 @@ jobs:
 
           # Make the key file readable only by the owner
           chmod 400 deploy_key.pem
+
+          # Add the remote server's host key to known_hosts
+          ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
       
           # Use the private key to connect to the server
           ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "node -v"
