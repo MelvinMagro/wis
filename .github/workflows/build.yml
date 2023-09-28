@@ -14,12 +14,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy to Server
-        run: |
-          echo "Deploying to server using GitHub PAT"
+      # - name: Deploy to Server
+      #   run: |
+      #     echo "Deploying to server using GitHub PAT"
           
-          # Example: Use the PAT to clone or fetch your code on the server
-          git clone https://github.com/MelvinMagro/wis.git /var/www/html/melvinmagro.online
+      - name: Debug Logging
+        run: |
+          ls -la /var/www/html
+          echo "GitHub Actions runner user: $USER"
           
           # Add any additional deployment steps as needed.
 
