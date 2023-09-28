@@ -14,8 +14,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build Theme Assets
+      - name: Deploy to Server
         run: |
-          npm install
-          npm run build
+          echo "Deploying to server using GitHub PAT"
+          
+          # Example: Use the PAT to clone or fetch your code on the server
+          git clone https://github.com/MelvinMagro/wis.git /var/www/html/melvinmagro.online
+          
+          # Add any additional deployment steps as needed.
+
+        env:
+          DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
 
