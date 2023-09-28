@@ -25,7 +25,8 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
           chmod 400 deploy_key.pem
           echo "Starting SSH connection"
-          ssh -v -o StrictHostKeyChecking=no -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
+          ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
+          ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
           
       # - name: Check Node.js Version on Server
       #   run: |
