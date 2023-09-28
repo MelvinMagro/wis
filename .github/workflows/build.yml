@@ -20,19 +20,26 @@ jobs:
           ls -la /var/www/html
           echo "GitHub Actions runner user: $USER"
 
-      - name: Check Node.js Version on Server
+      - name: Debug SSH Connection
         run: |
-          # Create a temporary file to store the private key
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
-
-          # Make the key file readable only by the owner
           chmod 400 deploy_key.pem
+          echo "Starting SSH connection"
+          ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
+          
+      # - name: Check Node.js Version on Server
+      #   run: |
+      #     # Create a temporary file to store the private key
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
 
-          # Add the remote server's host key to known_hosts
-          ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
+      #     # Make the key file readable only by the owner
+      #     chmod 400 deploy_key.pem
+
+      #     # Add the remote server's host key to known_hosts
+      #     ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
       
-          # Use the private key to connect to the server
-          ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "node -v"
+      #     # Use the private key to connect to the server
+      #     ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "node -v"
 
         env:
           DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
