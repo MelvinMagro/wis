@@ -23,16 +23,17 @@ jobs:
           touch ~/.ssh/known_hosts  # Ensure the known_hosts file exists
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
+          cd /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo && npm install && npm run build
           
-      - name: Install Node.js and npm and Build Theme Assets
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
+      # - name: Install Node.js and npm and Build Theme Assets
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: 14
 
-      - name: Install dependencies
-        run: |   
-          scp -i ./deploy_key.pem -r /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo
-          ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "cd /var/www/html/melvinmagro.online/wp-content/themes/wistheme && npm install && npm run build"
+      # - name: Install dependencies
+      #   run: |   
+      #     scp -i ./deploy_key.pem -r /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo
+      #     ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "cd /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo && npm install && npm run build"
 
         env:
           DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
