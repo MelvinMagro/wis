@@ -14,12 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-          
-      - name: Debug Logging
-        run: |
-          ls -la /var/www/html
-          echo "GitHub Actions runner user: $USER"
-
       - name: Debug SSH Connection
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
@@ -30,19 +24,26 @@ jobs:
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
           
-      # - name: Check Node.js Version on Server
-      #   run: |
-      #     # Create a temporary file to store the private key
-      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
-
-      #     # Make the key file readable only by the owner
-      #     chmod 400 deploy_key.pem
-
-      #     # Add the remote server's host key to known_hosts
-      #     ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
       
-      #     # Use the private key to connect to the server
-      #     ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "node -v"
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Theme Assets
+        run: npm run build
+
+      # - name: Build Theme Assets
+      #   run: |
+      #     # Navigate to your theme directory
+      #     cd /var/www/html/melvinmagro.online/wp-content/themes/your-theme-name
 
         env:
           DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
