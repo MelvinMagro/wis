@@ -33,14 +33,14 @@ jobs:
       - name: Sync Theme to Server
         env:
           host: 'ubuntu@51.20.52.140'
-          dest: '/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
+          dest: '/var/www/html/melvinmagro.online/wp-content/themes/'  # Remove 'twentytwentytwo/' from the end
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.host }} "mkdir -p ${{ env.dest }}"  # Create the destination directory if it doesn't exist
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.host }} "mkdir -p ${{ env.dest }}twentytwentytwo"  # Create the 'twentytwentytwo' subdirectory if it doesn't exist
           rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
-          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ "${{ env.host }}:${{ env.dest }}"
+          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ "${{ env.host }}:${{ env.dest }}twentytwentytwo/"  # Sync to the 'twentytwentytwo' subdirectory
       
           # Debugging: List files in the destination directory
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.host }} "ls -l ${{ env.dest }}"
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.host }} "ls -l ${{ env.dest }}twentytwentytwo/"
 
             
         # env:
