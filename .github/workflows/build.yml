@@ -10,9 +10,9 @@ jobs:
     name: Build and Deploy WordPress
     runs-on: ubuntu-latest
     
-    defaults:
-      run:
-        working-directory: /var/www/html/melvinmagro.online
+    # defaults:
+    #   run:
+    #     working-directory: /var/www/html/melvinmagro.online
         
     steps:
       - name: Checkout code
