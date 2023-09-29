@@ -35,8 +35,9 @@ jobs:
           host: 'ubuntu@51.20.52.140'
           dest: '/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
         run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.host }} "mkdir -p ${{ env.dest }}"  # Create the destination directory if it doesn't exist
           rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
-          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" "${{ env.dest }}" "${{ env.host }}:${{ env.dest }}"
+          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ "${{ env.host }}:${{ env.dest }}"
       
           # Debugging: List files in the destination directory
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.host }} "ls -l ${{ env.dest }}"
