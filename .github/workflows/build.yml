@@ -9,7 +9,11 @@ jobs:
   build-deploy:
     name: Build and Deploy WordPress
     runs-on: ubuntu-latest
-
+    
+    defaults:
+      run:
+        working-directory: /var/www/html/melvinmagro.online
+        
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,7 +27,20 @@ jobs:
           touch ~/.ssh/known_hosts  # Ensure the known_hosts file exists
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
-          ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "cd /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo && npm install && npm run build"
+      
+      - name: rsync
+        env:
+          dest: 'ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
+          chmod 600 ./deploy_key.pem
+          rsync -chav --delete \
+            -e 'ssh -i ./deploy_key.pem -o StrictHostKeyChecking=no' \
+            --exclude /deploy_key.pem \
+            --exclude /.git/ \      
+            --exclude /.github/ \
+            ./ ${{env.dest}}
+      # ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "cd /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo && npm install && npm run build"
           
       # - name: Install Node.js and npm and Build Theme Assets
       #   uses: actions/setup-node@v2
