@@ -27,19 +27,30 @@ jobs:
           touch ~/.ssh/known_hosts  # Ensure the known_hosts file exists
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
-      
-      - name: rsync
-        env:
-          dest: 'ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
+
+      - name: Set up SSH
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
-          chmod 600 ./deploy_key.pem
-          rsync -chav --delete \
-            -e 'ssh -i ./deploy_key.pem -o StrictHostKeyChecking=no' \
-            --exclude /deploy_key.pem \
-            --exclude /.git/ \      
-            --exclude /.github/ \
-            ./ ${{env.dest}}
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
+
+      - name: Sync to Server
+        env:
+          DEST: 'ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
+        run: |
+          rsync -rav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ ${{ env.DEST }}
+      # - name: rsync
+      #   env:
+      #     dest: 'ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
+      #   run: |
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
+      #     chmod 600 ./deploy_key.pem
+      #     rsync -chav --delete \
+      #       -e 'ssh -i ./deploy_key.pem -o StrictHostKeyChecking=no' \
+      #       --exclude /deploy_key.pem \
+      #       --exclude /.git/ \      
+      #       --exclude /.github/ \
+      #       ./ ${{env.dest}}
             
         # env:
         #   DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
