@@ -33,16 +33,17 @@ jobs:
 
       - name: Sync to Server
         env:
-          dest: 'ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
+          host: 'ubuntu@51.20.52.140'
+          dest: '/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
-          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" . ${{ env.dest }}
+          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" . "${{env.host}}:${{env.dest}}"
 
           # Debugging: List files in the destination directory
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{env.dest}} "ls -l /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/"
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{env.dest}} "ls -l ${{env.dest}}"
       #    sudo rsync -rav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ ${{ env.DEST }}
       # - name: rsync
       #   env:
