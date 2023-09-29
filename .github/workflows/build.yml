@@ -39,10 +39,10 @@ jobs:
       - name: Sync Theme to Server
         env:
           host: 'ubuntu@51.20.52.140'
-          dest: '/var/www/html/melvinmagro.online/wp-content/themes/'
+          dest: '/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
         run: |
           rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
-          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" "${{ steps.theme_dir.outputs.theme_dir }}/" "${host}:${dest}"
+          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ "${host}:${dest}"
 
           # Debugging: List files in the destination directory
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $host "ls -l ${dest}"
