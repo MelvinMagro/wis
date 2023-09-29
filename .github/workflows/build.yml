@@ -39,8 +39,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
-          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-          . ${{env.dest}}
+          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" . ${{ env.dest }}
+
+          # Debugging: List files in the destination directory
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${env.dest} "ls -l /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/"
       #    sudo rsync -rav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ ${{ env.DEST }}
       # - name: rsync
       #   env:
