@@ -24,42 +24,17 @@ jobs:
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
 
-      - name: Determine Theme Directory
-        id: theme_dir
-        run: |
-          theme_dir=$(find . -maxdepth 1 -type d -name "twentytwentytwo")
-          echo "::set-output name=theme_dir::$theme_dir"
-
-      - name: Set up SSH
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
-
       - name: Sync Theme to Server
         env:
           host: 'ubuntu@51.20.52.140'
           dest: '/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
         run: |
           rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
-          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ "${host}:${dest}"
+          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ${dest} "${host}:${dest}"
 
           # Debugging: List files in the destination directory
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $host "ls -l ${dest}"
 
-      # - name: Sync to Server
-      #   env:
-      #     host: 'ubuntu@51.20.52.140'
-      #     dest: '/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
-      #   run: |
-      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa
-      #     ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
-      #     rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
-      #     -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" . "${host}:${dest}"
-
-      #     # Debugging: List files in the destination directory
-      #     ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $host "ls -l $dest"
             
         # env:
         #   DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
