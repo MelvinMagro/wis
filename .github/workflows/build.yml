@@ -9,8 +9,7 @@ jobs:
   build-deploy:
     name: Build and Deploy WordPress
     runs-on: ubuntu-latest
-    
-        
+            
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -25,51 +24,43 @@ jobs:
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
 
-      # - name: Set up SSH
-      #   run: |
-      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa
-      #     ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
+      - name: Determine Theme Directory
+        id: theme_dir
+        run: |
+          theme_dir=$(find . -maxdepth 1 -type d -name "twentytwentytwo")
+          echo "::set-output name=theme_dir::$theme_dir"
 
-      - name: Sync to Server
-        env:
-          host: 'ubuntu@51.20.52.140'
-          dest: '/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
+      - name: Set up SSH
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
+
+      - name: Sync Theme to Server
+        env:
+          host: 'ubuntu@51.20.52.140'
+          dest: '/var/www/html/melvinmagro.online/wp-content/themes/'
+        run: |
           rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
-          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" . "${host}:${dest}"
+          -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" "${{ steps.theme_dir.outputs.theme_dir }}/" "${host}:${dest}"
 
           # Debugging: List files in the destination directory
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $host "ls -l $dest"
-      #    sudo rsync -rav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ ${{ env.DEST }}
-      # - name: rsync
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $host "ls -l ${dest}"
+
+      # - name: Sync to Server
       #   env:
-      #     dest: 'ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
+      #     host: 'ubuntu@51.20.52.140'
+      #     dest: '/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
       #   run: |
-      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
-      #     chmod 600 ./deploy_key.pem
-      #     rsync -chav --delete \
-      #       -e 'ssh -i ./deploy_key.pem -o StrictHostKeyChecking=no' \
-      #       --exclude /deploy_key.pem \
-      #       --exclude /.git/ \      
-      #       --exclude /.github/ \
-      #       ./ ${{env.dest}}
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #     ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
+      #     rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
+      #     -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" . "${host}:${dest}"
+
+      #     # Debugging: List files in the destination directory
+      #     ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $host "ls -l $dest"
             
         # env:
         #   DEPLOYMENT_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
-
-      # ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "cd /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo && npm install && npm run build"
-          
-      # - name: Install Node.js and npm and Build Theme Assets
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: 14
-
-      # - name: Install dependencies
-      #   run: |   
-      #     scp -i ./deploy_key.pem -r /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo
-      #     ssh -i ./deploy_key.pem ubuntu@51.20.52.140 "cd /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo && npm install && npm run build"
 
