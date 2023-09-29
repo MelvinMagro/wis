@@ -10,9 +10,6 @@ jobs:
     name: Build and Deploy WordPress
     runs-on: ubuntu-latest
     
-    # defaults:
-    #   run:
-    #     working-directory: /var/www/html/melvinmagro.online
         
     steps:
       - name: Checkout code
@@ -28,19 +25,22 @@ jobs:
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
           ssh -v -i ./deploy_key.pem ubuntu@51.20.52.140 "echo Hello from the server"
 
-      - name: Set up SSH
+      # - name: Set up SSH
+      #   run: |
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #     ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
+
+      - name: Sync to Server
+        env:
+          dest: 'ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
-
-      - name: Sync to Server
-        env:
-          DEST: 'ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/'
-        run: |
-          rsync -rav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
+          rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
           -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ \
-          ubuntu@51.20.52.140:/var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/
+          ./ ${{ env.DEST }}
       #    sudo rsync -rav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ ${{ env.DEST }}
       # - name: rsync
       #   env:
