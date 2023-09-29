@@ -16,7 +16,7 @@ jobs:
 
       - name: Sync Theme to Server
         run: |
-          rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
+          sudo rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
             --exclude='wp-*.php' --exclude='*.xml' --exclude='*.txt' --exclude='*.md' \
             ./wp-content/themes/twentytwentytwo/ /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/
       
