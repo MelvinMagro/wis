@@ -14,6 +14,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Sync Theme to Server
+        run: |
+          rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
+            --exclude='wp-*.php' --exclude='*.xml' --exclude='*.txt' --exclude='*.md' \
+            ./wp-content/themes/twentytwentytwo/ /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/
+      
+          # Debugging: List files in the destination directory
+          ls -l /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/
+
       # - name: Debug SSH Connection
       #   run: |
       #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
@@ -29,18 +38,6 @@ jobs:
       #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
       #     chmod 600 ~/.ssh/id_rsa
       #     ssh-keyscan -H 51.20.52.140 >> ~/.ssh/known_hosts
-
-      - name: Sync Theme to Server
-        run: |
-          # Replace with your deployment commands
-          # For example, you can use rsync, scp, or any other deployment method here
-          # Make sure to replace placeholders with actual values
-          rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
-            --exclude='wp-*.php' --exclude='*.xml' --exclude='*.txt' --exclude='*.md' \
-            ./wp-content/themes/twentytwentytwo/ /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/
-      
-          # Debugging: List files in the destination directory
-          ls -l /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/
 
       # - name: Sync Theme to Server
       #   env:
