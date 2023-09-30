@@ -18,10 +18,10 @@ jobs:
         run: |
           sudo rsync -chav --delete --exclude='.git*' --exclude='.github*' --exclude='*.github*' \
             --exclude='wp-*.php' --exclude='*.xml' --exclude='*.txt' --exclude='*.md' \
-            ./wp-content/themes/twentytwentytwo/ /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/
+            ./wp-content/themes/wistheme/ /var/www/html/melvinmagro.online/wp-content/themes/wistheme/
       
           # Debugging: List files in the destination directory
-          ls -l /var/www/html/melvinmagro.online/wp-content/themes/twentytwentytwo/
+          ls -l /var/www/html/melvinmagro.online/wp-content/themes/wistheme/
 
       # - name: Debug SSH Connection
       #   run: |
