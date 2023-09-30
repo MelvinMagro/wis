@@ -1,3 +1,9 @@
+$primary: #d8d4d4d0;
+$secondary: #2ebee2;
+
 body{
-    background: #3d6a86;
+    background: $primary;
 }
+
+@import 'header';
+@import 'content';

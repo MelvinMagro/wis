@@ -1,3 +1,7 @@
 <?php get_header(); ?>
-Test
+
+    <div class="content">
+    </div>
+
+
 <?php get_footer(); ?>

@@ -11,4 +11,4 @@ function scripts()
     wp_enqueue_script('app');
 }
 
-add_action('wp_enqueue_script', 'scripts');
+add_action('wp_enqueue_scripts', 'scripts');
