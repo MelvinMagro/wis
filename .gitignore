@@ -1,21 +1,8 @@
-# Ignore WordPress core files
-wp-admin/
-wp-includes/
-wp-content/upgrade/
-wp-content/backup-db/
-wp-content/backup-dbcsv/
-wp-content/backup-dblog/
-wp-content/cache/
-wp-content/upgrade/
-wp-content/uploads/
-wp-content/wp-cache-config.php
-
 # Ignore WordPress configuration files
 wp-config.php
 wp-config-sample.php
 
 # Ignore development and system files
-.htaccess
 error_log
 license.txt
 readme.html
