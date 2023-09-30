@@ -2,4 +2,18 @@
     min-height: 1000px;
     background: #eee;
     width: 100%;
+    text-align: center;
+}
+
+.github-link {
+    color: #d6035b;
+    text-decoration: none; 
+    font-weight: bold; 
+    font-family: "Georgia", serif;
+    font-size: 20px;
+    line-height:200px;
+}
+
+.github-link:hover {
+    text-decoration: underline; 
 }
